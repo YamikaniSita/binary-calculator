@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html ng-app='app'>
+	<head>
+		<script src='js/angular.js'></script>
+		<script src='js/angular-route.js'></script>
+		<script src='js/angular-resource.js'></script>
+		<link rel="stylesheet" type="text/css" href="style/main.css"></link>
+		<script type="text/javascript" src="style/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="js/ip.js"></script>
+		<script type="text/javascript" src="js/radix_system.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/semantic/semantic.min.css"></link>
+		<link rel="stylesheet" type="text/css" href="style/fontawesome/css/all.min.css"></link>
+	</head>
+<body>
+	<nav ng-controller='main-ctrl'>
+		<a id='toggle-drop'><i class='fa fa-list-ul fa-2x'></i></a><span class='activity'>{{activity}}</span>
+	</nav>
+	<div class='side'>
+		<a href='#'>
+			<div class='side-item'>Base Convertor</div>
+		</a>
+		<a href='#/ip'>
+			<div class='side-item'>IP Calculator</div>
+		</a>
+	</div>
+	<div class='input'>{{output}}</div>
+	<div class='work-area' ng-view></div>
+</body>
+<script>
+	var app=angular.module('app', ['ngRoute', 'ngResource']);
+	app.controller('main-ctrl', function($scope, $rootScope){
+		$rootScope.output=0;
+	});
+	app.controller('typeConvertor', function($scope, $rootScope){
+		$rootScope.base='dec';
+		$rootScope.activity='Base Convertor';
+		$rootScope.output='';
+		$scope.numberUp=function(val){
+			var base=$rootScope.base;
+			var currentValue=$rootScope.output;
+			$rootScope.output=currentValue+val;
+			var x=$rootScope.output;
+			if(base=='dec'){
+			//convert to binary and hex
+				$rootScope.decOutput=x;
+				var hexValue=convertArrToStr(startValueFromEnd(convertToHex(x)));
+				$rootScope.hexOutput=hexValue;
+				var binValue=padZeros(convertArrToStr(startValueFromEnd(convertToBinary(x))));
+				$rootScope.binOutput=binValue;
+			}
+			else if(base=='bin'){
+			//convert to decimal and hex
+				$rootScope.binOutput=x;
+				var decValue=convertToDecimal('binary', x);
+				$rootScope.decOutput=decValue;
+				var hexValue=convertArrToStr(startValueFromEnd(convertToHex(decValue)));
+				$rootScope.hexOutput=hexValue;
+			}
+			else if(base=='hex'){
+			//convert to decimal and binary
+				$rootScope.hexOutput=x;
+				var decValue=convertToDecimal('hex', x);
+				$rootScope.decOutput=decValue;
+				var binValue=padZeros(convertArrToStr(startValueFromEnd(convertToBinary(decValue))));
+				$rootScope.binOutput=binValue;
+			}
+		}
+		$scope.changeMainType=function(type){
+			var base=$rootScope.base;
+			var x=$rootScope.output;
+			//convert current output if any to selected base
+			if($rootScope.output!=''){
+				//something to convert
+				if(base=='dec'){
+					if(type=='bin'){
+						//decimal to binary
+						var binValue=padZeros(convertArrToStr(startValueFromEnd(convertToBinary(x))));
+						$rootScope.output=binValue;
+						$rootScope.base=type;
+					}
+					else if(type=='hex'){
+						var hexValue=convertArrToStr(startValueFromEnd(convertToHex(x)));
+						$rootScope.output=hexValue;
+						$rootScope.base=type;
+					}
+				}
+				if(base=='hex'){
+					if(type=='bin'){
+						var decValue=convertToDecimal('hex', x);
+						var binValue=padZeros(convertArrToStr(startValueFromEnd(convertToBinary(decValue))));
+						$rootScope.output=binValue;
+						$rootScope.base=type;
+					}
+					else if(type=='dec'){
+						var decValue=convertToDecimal('hex', x);
+						$rootScope.output=decValue;
+						$rootScope.base=type;
+					}
+				}
+				if(base=='bin'){
+					if(type=='dec'){
+						var decValue=convertToDecimal('binary', x);
+						$rootScope.output=decValue;
+						$rootScope.base=type;
+					}
+					else if(type=='hex'){
+						var decValue=convertToDecimal('binary', x);
+						var hexValue=convertArrToStr(startValueFromEnd(convertToHex(decValue)));
+						$rootScope.output=hexValue;
+						$rootScope.base=type;
+					}
+				}
+			}
+			else{
+				//nothing to convert
+				$rootScope.base=type;
+			}
+			
+		}
+		$scope.backspace=function(){
+			var out=$rootScope.output;
+			if(out!=''){
+			out=$rootScope.output=out.slice(0, -1);
+			var base=$rootScope.base;
+			if(base=='dec'){
+				$rootScope.binOutput='';
+				$rootScope.hexOutput='';
+				$rootScope.decOutput=out;
+			}
+			else if(base=='hex'){
+				$rootScope.hexOutput=out;
+				var decValue=convertToDecimal('hex', out);	
+				$rootScope.decOutput=decValue;
+				var binValue=padZeros(convertArrToStr(startValueFromEnd(convertToBinary(decValue))));
+				$rootScope.binOutput=binValue;
+			}
+			else if(base=='bin'){
+				$rootScope.binOutput=out;
+				var decValue=convertToDecimal('binary', out);
+				$rootScope.decOutput=decValue;
+				var hexValue=convertArrToStr(startValueFromEnd(convertToHex(decValue)));
+				$rootScope.hexOutput=hexValue;
+			}
+			}
+			
+		}
+		$scope.clear=function(){
+			$rootScope.output='';
+			$rootScope.hexOutput='';
+			$rootScope.binOutput='';
+			$rootScope.decOutput='';
+		}
+	});
+	app.controller('IpController', function($scope, $rootScope){
+		$rootScope.output='';
+		$rootScope.activity='IP Calculator';
+		$scope.inputType='dec';
+		$scope.ipKeyUp=function(val){
+			var currentValue=$rootScope.output;
+			$rootScope.output=currentValue+val;
+		}
+		$scope.ipEventUp=function(ev){
+			var currentValue=$rootScope.output;
+			var cidrValue='';
+			if(getCidrValue(currentValue)==false){
+				cidrValue=0;
+			}
+			else{
+				cidrValue=getCidrValue(currentValue);
+			}
+			var ip=new IpAddress(currentValue+'.', cidrValue);
+			if(ev=='valid'){
+				if(ip.isValid()==true){
+					$scope.ipOutput=true;
+				}
+				else{
+					$scope.ipOutput=false;
+				}
+			}
+			else if(ev=='tobinary'){
+				$scope.ipOutput=ip.inBinary();
+			}
+			else if(ev=='subnet'){
+				$scope.ipOutput=ip.getSubnetMask();
+			}
+			else if(ev=='class'){
+				$scope.ipOutput=ip.getClass();
+			}
+			else if(ev=='todec'){
+				var v=ip.splitIntoOctets(currentValue);
+				var t=convertToDecimal('binary', v[0])+'.'+convertToDecimal('binary', v[1])+'.'+convertToDecimal('binary', v[2])+'.'+convertToDecimal('binary', v[3]);
+				$scope.ipOutput=t;
+			}
+		}
+		$scope.changeInputType=function(type){
+			$scope.inputType=type;
+		}
+		
+	});
+	app.config(function($routeProvider){
+		$routeProvider.when('/', {
+			templateUrl: 'type-convertor.html',
+			controller:'typeConvertor'
+		}).when('/ip', {
+			templateUrl: 'ip.html',
+			controller: 'IpController'
+		}).otherwise({
+			redirectTo: '/'
+		});
+	});
+	
+</script>
+<script>
+	$('#toggle-drop').click(function(){
+		if($('.side').is(':hidden')){
+			$('.side').show();
+		}
+		else{
+			$('.side').hide();
+		}
+	});
+</script>
+
