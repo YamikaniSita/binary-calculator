@@ -1,0 +1,41 @@
+<html>
+	<head><title>IP Calculator</title></head>
+	<body>
+		<div class='ipOutput'>Result: {{ipOutput}}</div>
+		<div class='type-menu' ng-click="changeInputType('bin')">BIN</div>
+		<div class='type-menu' ng-click="changeInputType('dec')">DEC</div>
+		<input type='text' ng-model='inputType' value='{{inputType}}'style='display:none;'>
+		<table>
+			<tr>
+				<td><button ng-click="ipKeyUp('7')" ng-disabled="(inputType=='bin')">7</button>
+				<td><button ng-click="ipKeyUp('8')" ng-disabled="(inputType=='bin')">8</button>
+				<td><button ng-click="ipKeyUp('9')" ng-disabled="(inputType=='bin')">9</button>
+				<td><button ng-click="ipEventUp('tobinary')" ng-disabled="(inputType=='bin')">To binary</button>
+			</tr>
+			<tr>
+				<td><button ng-click="ipKeyUp('4')" ng-disabled="(inputType=='bin')">4</button>
+				<td><button ng-click="ipKeyUp('5')" ng-disabled="(inputType=='bin')">5</button>
+				<td><button ng-click="ipKeyUp('6')" ng-disabled="(inputType=='bin')">6</button>
+				<td><button ng-click="ipEventUp('todec')" ng-disabled="(inputType=='dec')">To Decimal</button>
+			</tr>
+			<tr>
+				<td><button ng-click="ipKeyUp('3')" ng-disabled="(inputType=='bin')">3</button>
+				<td><button ng-click="ipKeyUp('2')" ng-disabled="(inputType=='bin')">2</button>
+				<td><button ng-click="ipKeyUp('1')">1</button>
+				<td><button ng-click="ipEventUp('subnet')" ng-disabled="(inputType=='bin')">Mask</button>
+
+			</tr>
+			<tr>
+				<td><button ng-click="ipKeyUp('/')" >/</button>
+				<td><button ng-click="ipKeyUp('0')">0</button>
+				<td><button ng-click="ipKeyUp('.')" >.</button>
+				<td><button ng-click="ipEventUp('class')" ng-disabled="(inputType=='bin')">Class</button>
+			</tr>
+			<tr>
+				<td><button ng-click='backspace()'><i class='fa fa-undo'></i></button>
+				<td><button ng-disabled='true'>&nbsp;</button>
+				<td><button ng-click='clear()'>C</button>
+				<td><button ng-click="ipEventUp('valid')" ng-disabled="(inputType=='bin')">Is Valid</button>
+			</tr>
+		</table>
+	</body>

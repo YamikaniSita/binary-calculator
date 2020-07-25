@@ -1,0 +1,39 @@
+<html>
+	<head><title>Base Converter</title></head>
+	<body>
+		<div class='type-menu' ng-click="changeMainType('hex')">HEX {{hexOutput}}</div>
+		<div class='type-menu' ng-click="changeMainType('bin')">BIN {{binOutput}}</div>
+		<div class='type-menu' ng-click="changeMainType('dec')">DEC {{decOutput}}</div>
+		<input type='text' ng-model='base' value='{{base}}'style='display:none;'>
+		
+		<table>
+			<tr>
+				<td><button ng-click="numberUp('A')" ng-disabled="(base=='dec'||base=='bin')">A</button>
+				<td><button ng-click="numberUp('B')" ng-disabled="(base=='dec'||base=='bin')">B</button>
+				<td><button ng-click="numberUp('7')" ng-disabled="(base=='bin')">7</button>
+				<td><button ng-click="numberUp('8')" ng-disabled="(base=='bin')">8</button>
+				<td><button ng-click="numberUp('9')" ng-disabled="(base=='bin')">9</button>
+			</tr>
+			<tr>
+				<td><button ng-click="numberUp('C')" ng-disabled="(base=='dec'||base=='bin')">C</button>
+				<td><button ng-click="numberUp('D')" ng-disabled="(base=='dec'||base=='bin')">D</button>
+				<td><button ng-click="numberUp('4')" ng-disabled="(base=='bin')">4</button>
+				<td><button ng-click="numberUp('5')" ng-disabled="(base=='bin')">5</button>
+				<td><button ng-click="numberUp('6')" ng-disabled="(base=='bin')">6</button>
+			</tr>
+			<tr>
+				<td><button ng-click="numberUp('E')" ng-disabled="(base=='dec'||base=='bin')">E</button>
+				<td><button ng-click="numberUp('F')" ng-disabled="(base=='dec'||base=='bin')">F</button>
+				<td><button ng-click="numberUp('3')" ng-disabled="(base=='bin')">3</button>
+				<td><button ng-click="numberUp('2')" ng-disabled="(base=='bin')">2</button>
+				<td><button ng-click="numberUp('1')" >1</button>
+			</tr>
+			<tr>
+				<td><button ng-click="backspace()" ><i class='fa fa-undo'></i></button>
+				<td><button ng-click="clear()" >C</button>
+				<td><button ng-disabled='true'>&nbsp</button>
+				<td><button ng-click="numberUp('0')">0</button>
+				<td><button ng-disabled='true'>&nbsp</button>
+			</tr>
+		</table>
+				
