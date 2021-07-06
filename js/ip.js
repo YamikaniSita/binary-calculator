@@ -85,7 +85,7 @@ IpAddress.prototype.getSubnetMask = function(){
 		else if(this.getClass()==='C'){
 			return '255.255.255.0.'
 		}
-		else if(this.getClass()==='D'&&this.getClass()==='E'){
+		else if(this.getClass()==='D' || this.getClass()==='E'){
 			return 'The concept of subnet mask does not apply to this class';
 		}
 	}
